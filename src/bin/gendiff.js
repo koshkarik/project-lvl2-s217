@@ -1,14 +1,7 @@
 #!/usr/bin/env node
 
 import program from 'commander';
-import fs from 'fs';
-import findDiff from '..';
-
-const genDiff = (file1, file2) => {
-  const obj1 = JSON.parse(fs.readFileSync(file1));
-  const obj2 = JSON.parse(fs.readFileSync(file2));
-  return `{\n${findDiff(obj1, obj2)}}`;
-};
+import genDiff from '..';
 
 program
   .version('0.1.0')
@@ -24,6 +17,4 @@ program
   });
 
 program.parse(process.argv);
-
-export default genDiff;
 

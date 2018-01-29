@@ -1,6 +1,7 @@
 import _ from 'lodash';
+import fs from 'fs';
 
-const findDiff = (obj1, obj2) => {
+export const findDiff = (obj1, obj2) => {
   const obj1Keys = Object.keys(obj1);
   const obj2Keys = Object.keys(obj2);
   const objectsKeys = obj1Keys.concat(_.difference(obj2Keys, obj1Keys));
@@ -17,4 +18,10 @@ const findDiff = (obj1, obj2) => {
   }, '');
 };
 
-export default findDiff;
+const genDiff = (file1, file2) => {
+  const obj1 = JSON.parse(fs.readFileSync(file1));
+  const obj2 = JSON.parse(fs.readFileSync(file2));
+  return `{\n${findDiff(obj1, obj2)}}`;
+};
+
+export default genDiff;

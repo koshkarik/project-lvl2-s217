@@ -1,11 +1,11 @@
-import findDiff from './../src/';
-import genDiff from '../src/bin/gendiff';
+import fs from 'fs';
+import genDiff, { findDiff } from './../src/';
 
 const object1 = { a: 1, b: 2, c: 3 };
 const object2 = { a: 1, b: 4, d: 7 };
 
 test('compare objects', () => {
-  expect(findDiff(object1, object2)).toBe('    a: 1\n  + b: 4\n  - b: 2\n  - c: 3\n  + d: 7\n');
+  expect(findDiff(object1, object2)).toBe(fs.readFileSync('./__tests__/__fixtures__/expected.txt', 'utf-8'));
 });
 
 test('compare files', () => {

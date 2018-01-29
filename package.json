@@ -28,6 +28,9 @@
   "bugs": {
     "url": "https://github.com/koshkarik/project-lvl2-s217/issues"
   },
+  "jest": {
+    "testEnvironment": "node"
+  },
   "homepage": "https://github.com/koshkarik/project-lvl2-s217#readme",
   "devDependencies": {
     "babel-cli": "^6.26.0",
