@@ -1,0 +1,38 @@
+{
+  "name": "hexlet-project-2",
+  "version": "0.1.0",
+  "description": "difference evaluator",
+  "main": "index.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "test": "test",
+    "babel-node": "babel-node",
+    "build": "NODE_ENV=production babel src --out-dir dist --source-maps inline",
+    "prepublishOnly": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/koshkarik/project-lvl2-s217.git"
+  },
+  "keywords": [
+    "difference"
+  ],
+  "author": "Yarik",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/koshkarik/project-lvl2-s217/issues"
+  },
+  "homepage": "https://github.com/koshkarik/project-lvl2-s217#readme",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "babel-eslint": "*",
+    "eslint": "^4.16.0",
+    "eslint-plugin-import": "*",
+    "eslint-config-airbnb-base": "*"
+  }
+}
