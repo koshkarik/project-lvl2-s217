@@ -1,19 +1,19 @@
 {
   "name": "hexlet-project-2",
-  "version": "0.1.1",
+  "version": "0.2.1",
   "description": "difference evaluator",
   "main": "index.js",
   "files": [
     "dist"
   ],
   "scripts": {
-    "test": "test",
+    "test": "jest",
     "babel-node": "babel-node",
     "build": "NODE_ENV=production babel src --out-dir dist --source-maps inline",
     "prepublishOnly": "npm run build",
     "eslint": "eslint"
   },
-  "bin" : {
+  "bin": {
     "gendiff": "dist/bin/gendiff.js"
   },
   "repository": {
@@ -32,14 +32,19 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
+    "babel-eslint": "*",
+    "babel-jest": "*",
     "babel-preset-env": "^1.6.1",
     "babel-preset-stage-0": "^6.24.1",
-    "babel-eslint": "*",
     "eslint": "^4.16.0",
+    "eslint-config-airbnb-base": "*",
     "eslint-plugin-import": "*",
-    "eslint-config-airbnb-base": "*"
+    "jest": "^22.1.4",
+    "jest-cli": "*"
   },
   "dependencies": {
-    "commander": "^2.13.0"
+    "commander": "^2.13.0",
+    "eslint-plugin-jest": "^21.7.0",
+    "lodash": "^4.17.4"
   }
 }

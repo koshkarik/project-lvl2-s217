@@ -8,4 +8,11 @@ lint:
 	npm run eslint .	
 
 publish:
-	npm publish	
+	npm publish
+
+test:
+	npm test
+
+build:
+	rm -rf dist
+	npm run build			
