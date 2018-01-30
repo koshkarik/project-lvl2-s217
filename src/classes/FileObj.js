@@ -5,6 +5,6 @@ export default class FileObj {
     this.file = file;
   }
   getFile() {
-    return fs.readFileSync(this.file);
+    return fs.readFileSync(this.file, 'utf-8');
   }
 }
