@@ -1,6 +1,5 @@
 import fs from 'fs';
-import genDiff from './../src/';
-import { findDiff } from './../src/classes/FileComparator';
+import genDiff, { findDiff } from './../src/';
 
 const object1 = { a: 1, b: 2, c: 3 };
 const object2 = { a: 1, b: 4, d: 7 };
