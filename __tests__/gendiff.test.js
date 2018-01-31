@@ -1,7 +1,8 @@
+import fs from 'fs';
 import genDiff from './../src/';
 
 describe('File difference tests', () => {
-  const expected = '{\n    host: hexlet.io\n  + timeout: 20\n  - timeout: 50\n  - proxy: 123.234.53.22\n  + verbose: true\n}';
+  const expected = fs.readFileSync('./__tests__/__fixtures__/genDiffExpected', 'utf-8');
   it('json files', () => {
     expect(genDiff('./__tests__/__fixtures__/before.json', './__tests__/__fixtures__/after.json'))
       .toBe(expected);
