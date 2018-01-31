@@ -25,9 +25,9 @@ const getFileExt = (pathToFile) => {
 };
 
 const parseAnyFormat = {
-  json: data => JSON.parse(data),
-  ini: data => ini.parse(data),
-  yml: data => yaml.safeLoad(data),
+  json: JSON.parse,
+  ini: ini.parse,
+  yml: yaml.safeLoad,
 };
 
 const parse = (filePath) => {
@@ -36,9 +36,9 @@ const parse = (filePath) => {
   return parseAnyFormat[ext](fileData);
 };
 
-const genDiff = (file1, file2) => {
-  const parsedData1 = parse(file1);
-  const parsedData2 = parse(file2);
+const genDiff = (pathToFile1, pathToFile2) => {
+  const parsedData1 = parse(pathToFile1);
+  const parsedData2 = parse(pathToFile2);
   return `{\n${findDiff(parsedData1, parsedData2)}}`;
 };
 
