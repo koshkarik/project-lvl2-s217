@@ -30,16 +30,15 @@ const parseAnyFormat = {
   yml: yaml.safeLoad,
 };
 
-const parse = (filePath) => {
-  const fileData = fs.readFileSync(filePath, 'utf-8');
-  const ext = getFileExt(filePath);
-  return parseAnyFormat[ext](fileData);
-};
+const parse = (fileData, ext) => parseAnyFormat[ext](fileData);
 
-const genDiff = (pathToFile1, pathToFile2) => {
-  const parsedData1 = parse(pathToFile1);
-  const parsedData2 = parse(pathToFile2);
-  return `{\n${findDiff(parsedData1, parsedData2)}}`;
+const genDiff = (...pathToFiles) => {
+  const filesData = pathToFiles.map((filePath) => {
+    const extension = getFileExt(filePath);
+    const data = fs.readFileSync(filePath, 'utf-8');
+    return parse(data, extension);
+  });
+  return `{\n${findDiff(...filesData)}}`;
 };
 
 export default genDiff;
