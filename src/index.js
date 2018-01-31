@@ -19,27 +19,27 @@ const findDiff = (obj1, obj2) => {
   }, '');
 };
 
-const getFileExt = (file) => {
-  const base = path.basename(file);
+const getFileExt = (pathToFile) => {
+  const base = path.basename(pathToFile);
   return path.extname(base).substring(1);
 };
 
 const parseAnyFormat = {
-  json: file => JSON.parse(file),
-  ini: file => ini.parse(file),
-  yml: file => yaml.safeLoad(file),
+  json: data => JSON.parse(data),
+  ini: data => ini.parse(data),
+  yml: data => yaml.safeLoad(data),
 };
 
-const parse = (file) => {
-  const fileData = fs.readFileSync(file, 'utf-8');
-  const ext = getFileExt(file);
+const parse = (filePath) => {
+  const fileData = fs.readFileSync(filePath, 'utf-8');
+  const ext = getFileExt(filePath);
   return parseAnyFormat[ext](fileData);
 };
 
 const genDiff = (file1, file2) => {
-  const parsedFile1 = parse(file1);
-  const parsedFile2 = parse(file2);
-  return `{\n${findDiff(parsedFile1, parsedFile2)}}`;
+  const parsedData1 = parse(file1);
+  const parsedData2 = parse(file2);
+  return `{\n${findDiff(parsedData1, parsedData2)}}`;
 };
 
 export default genDiff;
