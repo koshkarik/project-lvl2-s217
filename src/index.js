@@ -20,17 +20,14 @@ const findDiff = (obj1, obj2) => {
 };
 
 export const makeAst = (data, keyName = undefined) => {
-  const parentInfo = !keyName ? { type: 'root', children: [] } : { type: 'tree', key: keyName, children: [] };
+  const parentInfo = !keyName ? { type: 'root' } : { type: 'tree', key: keyName };
   return {
     ...parentInfo,
-    children: Object.keys(data).map((item) => {
-      if (data[item] instanceof Object) {
-        return makeAst(data[item], item);
-      }
-      return ({
-        type: 'leaf', key: item, value: data[item], children: [],
-      });
-    }),
+    children: Object.keys(data).map(item => (data[item] instanceof Object
+      ? makeAst(data[item], item)
+      : {
+        type: 'leaf', key: item, value: data[item],
+      })),
   };
 };
 
