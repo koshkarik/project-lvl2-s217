@@ -19,6 +19,21 @@ const findDiff = (obj1, obj2) => {
   }, '');
 };
 
+export const makeAst = (data, keyName = undefined) => {
+  const parentInfo = !keyName ? { type: 'root', children: [] } : { type: 'tree', key: keyName, children: [] };
+  return {
+    ...parentInfo,
+    children: Object.keys(data).map((item) => {
+      if (data[item] instanceof Object) {
+        return makeAst(data[item], item);
+      }
+      return ({
+        type: 'leaf', key: item, value: data[item], children: [],
+      });
+    }),
+  };
+};
+
 const getFileExt = (pathToFile) => {
   const base = path.basename(pathToFile);
   return path.extname(base).substring(1);
@@ -32,13 +47,12 @@ const parseAnyFormat = {
 
 const parse = (fileData, ext) => parseAnyFormat[ext](fileData);
 
-const genDiff = (...pathToFiles) => {
-  const filesData = pathToFiles.map((filePath) => {
-    const extension = getFileExt(filePath);
-    const data = fs.readFileSync(filePath, 'utf-8');
-    return parse(data, extension);
-  });
-  return `{\n${findDiff(...filesData)}}`;
+const genDiff = (pathToFile1, pathToFile2) => {
+  const ext1 = getFileExt(pathToFile1);
+  const ext2 = getFileExt(pathToFile2);
+  const data1 = fs.readFileSync(pathToFile1, 'utf-8');
+  const data2 = fs.readFileSync(pathToFile2, 'utf-8');
+  return `{\n${findDiff(parse(data1, ext1), parse(data2, ext2))}}`;
 };
 
 export default genDiff;

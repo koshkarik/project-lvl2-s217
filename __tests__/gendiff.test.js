@@ -1,5 +1,26 @@
 import fs from 'fs';
-import genDiff from './../src/';
+import genDiff, { makeAst } from './../src/';
+
+const testObject = {
+  first: {
+    innerFirst: {
+      a: 1,
+      b: 2,
+    },
+    innerSecond: {
+      a: 1,
+      b: 2,
+    },
+  },
+  second: 'secondValue',
+  third: {
+    innerThird: 'test',
+  },
+};
+
+test('make ast tree', () => {
+  expect(makeAst(testObject)).toBe({});
+});
 
 describe('File difference tests', () => {
   const expected = fs.readFileSync('./__tests__/__fixtures__/genDiffExpected', 'utf-8');
