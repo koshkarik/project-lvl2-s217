@@ -19,7 +19,7 @@ const findDiff = (obj1, obj2) => {
   }, '');
 };
 
-export const makeAst = (data, keyName = undefined) => {
+export const makeAst = (data, keyName) => {
   const parentInfo = !keyName ? { type: 'root' } : { type: 'tree', key: keyName };
   return {
     ...parentInfo,
