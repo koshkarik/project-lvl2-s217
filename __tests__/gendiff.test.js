@@ -20,24 +20,21 @@ describe('Flat file difference tests', () => {
     expect(genDiff('./__tests__/__fixtures__/before.ini', './__tests__/__fixtures__/after.ini'))
       .toBe(expected);
   });
-});
-
-describe('Recursive files difference test', () => {
-  const expected = fs.readFileSync('./__tests__/__fixtures__/genDiffComplExpected', 'utf-8');
-  it('json files', () => {
+  const recExpected = fs.readFileSync('./__tests__/__fixtures__/genDiffComplExpected', 'utf-8');
+  it('json recurse files', () => {
     expect(genDiff('./__tests__/__fixtures__/beforeRecStructure.json', './__tests__/__fixtures__/afterRecStructure.json'))
-      .toBe(expected);
+      .toBe(recExpected);
   });
-  it('yaml files', () => {
+  it('yaml recurse files', () => {
     expect(genDiff('./__tests__/__fixtures__/beforeRecStructure.yml', './__tests__/__fixtures__/afterRecStructure.yml'))
-      .toBe(expected);
+      .toBe(recExpected);
   });
-  it('ini files', () => {
+  it('ini recurse files', () => {
     expect(genDiff('./__tests__/__fixtures__/beforeRecStructure.ini', './__tests__/__fixtures__/afterRecStructure.ini'))
-      .toBe(expected);
+      .toBe(recExpected);
   });
-  it('ini and yaml files', () => {
+  it('ini and yaml recurse files', () => {
     expect(genDiff('./__tests__/__fixtures__/beforeRecStructure.ini', './__tests__/__fixtures__/afterRecStructure.yml'))
-      .toBe(expected);
+      .toBe(recExpected);
   });
 });
