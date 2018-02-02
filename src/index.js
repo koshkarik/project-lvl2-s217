@@ -4,7 +4,7 @@ import yaml from 'js-yaml';
 import fs from 'fs';
 import path from 'path';
 
-export const makeAst = (data, keyName) => {
+const makeAst = (data, keyName) => {
   const parentInfo = !keyName ? { type: 'root' } : { type: 'tree', key: keyName };
   return {
     ...parentInfo,
@@ -18,7 +18,7 @@ export const makeAst = (data, keyName) => {
 
 const step = times => ' '.repeat(times);
 
-export const astToString = (ast, offset) => (ast.type === 'leaf'
+const astToString = (ast, offset) => (ast.type === 'leaf'
   ? `${ast.key}: ${ast.value}`
   : ast.children.reduce(
     (acc, cur) => (cur.type === 'leaf'
