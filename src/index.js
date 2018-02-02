@@ -18,7 +18,7 @@ export const makeAst = (data, keyName) => {
 
 const step = times => ' '.repeat(times);
 
-export const astToString = (ast, offset = 0) => (ast.type === 'leaf'
+export const astToString = (ast, offset) => (ast.type === 'leaf'
   ? `${ast.key}: ${ast.value}`
   : ast.children.reduce(
     (acc, cur) => (cur.type === 'leaf'
