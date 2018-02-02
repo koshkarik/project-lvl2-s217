@@ -37,10 +37,9 @@ const findDiff = (ast1, ast2, offset = 2) => {
     if (!astObj1 || !astObj2) {
       const sign = astObj1 ? '-' : '+';
       const newAst = astObj1 || astObj2;
-      if (newAst.type === 'leaf') {
-        return acc.concat(`\n${step(offset)}${sign} ${astToString(newAst, offset)}`);
-      }
-      return acc.concat(`\n${step(offset)}${sign} ${newAst.key}: {${astToString(newAst, offset + 4)}\n${step(offset + 2)}}`);
+      return newAst.type === 'leaf'
+        ? acc.concat(`\n${step(offset)}${sign} ${astToString(newAst, offset)}`)
+        : acc.concat(`\n${step(offset)}${sign} ${newAst.key}: {${astToString(newAst, offset + 4)}\n${step(offset + 2)}}`);
     } else if (astObj1.type === 'leaf' || astObj2.type === 'leaf') {
       return astObj1.value !== astObj2.value
         ? acc.concat(`\n${step(offset)}+ ${astToString(astObj2, offset)}\n${step(offset)}- ${astToString(astObj1, offset)}`)
