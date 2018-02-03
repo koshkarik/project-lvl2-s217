@@ -1,5 +1,5 @@
 import fs from 'fs';
-import genDiff, { genDiff2 } from './../src/';
+import genDiff from './../src/';
 
 describe('Flat file difference tests', () => {
   const expected = fs.readFileSync('./__tests__/__fixtures__/genDiffExpected', 'utf-8');
