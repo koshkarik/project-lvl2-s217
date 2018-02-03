@@ -2,6 +2,7 @@ import fs from 'fs';
 import genDiff from './../src/';
 
 
+
 describe('Flat file difference tests', () => {
   const expected = fs.readFileSync('./__tests__/__fixtures__/genDiffExpected', 'utf-8');
   it('json files', () => {

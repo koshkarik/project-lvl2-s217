@@ -4,50 +4,49 @@ import yaml from 'js-yaml';
 import fs from 'fs';
 import path from 'path';
 
-const makeAst = (data, keyName) => {
-  const parentInfo = !keyName ? { type: 'root' } : { type: 'tree', key: keyName };
-  return {
-    ...parentInfo,
-    children: Object.keys(data).map(item => (data[item] instanceof Object
-      ? makeAst(data[item], item)
-      : {
-        type: 'leaf', key: item, value: data[item],
-      })),
-  };
+export const genAst = (obj1 = {}, obj2 = {}) => {
+  const firstKeys = Object.keys(obj1);
+  const secondKeys = Object.keys(obj2);
+  const unitedKeys = _.union(firstKeys, secondKeys);
+  return unitedKeys.map((cur) => {
+    if (_.isObject(obj1[cur]) && _.isObject(obj2[cur])) {
+      return ({ type: 'nestedObj', key: cur, children: genAst(obj1[cur], obj2[cur]) });
+    } else if (obj1[cur] && !obj2[cur]) {
+      return ({ type: 'removed', key: cur, value: obj1[cur] });
+    } else if (!obj1[cur] && obj2[cur]) {
+      return ({ type: 'added', key: cur, value: obj2[cur] });
+    } else if (obj1[cur] === obj2[cur]) {
+      return ({ type: 'unchanged', key: cur, value: obj1[cur] });
+    }
+    return ({
+      type: 'changed', key: cur, valueBeforeChange: obj1[cur], valueAfterChange: obj2[cur],
+    });
+  });
 };
 
 const step = times => ' '.repeat(times);
 
-const astToString = (ast, offset) => (ast.type === 'leaf'
-  ? `${ast.key}: ${ast.value}`
-  : ast.children.reduce(
-    (acc, cur) => (cur.type === 'leaf'
-      ? acc.concat(`\n${step(offset + 2)}${cur.key}: ${cur.value}`)
-      : acc.concat(`\n${step(offset + 2)}${cur.key}: {${astToString(cur, offset + 2)}\n${step(offset)}}`))
-    , '',
-  ));
-
-const findDiff = (ast1, ast2, offset = 2) => {
-  const ast1Children = ast1.children.map(item => item.key);
-  const ast2Children = ast2.children.map(item => item.key);
-  const allChildren = _.union(ast1Children, ast2Children);
-  return allChildren.reduce((acc, cur) => {
-    const astObj1 = ast1.children.find(item => item.key === cur);
-    const astObj2 = ast2.children.find(item => item.key === cur);
-    if (!astObj1 || !astObj2) {
-      const sign = astObj1 ? '-' : '+';
-      const newAst = astObj1 || astObj2;
-      return newAst.type === 'leaf'
-        ? acc.concat(`\n${step(offset)}${sign} ${astToString(newAst, offset)}`)
-        : acc.concat(`\n${step(offset)}${sign} ${newAst.key}: {${astToString(newAst, offset + 4)}\n${step(offset + 2)}}`);
-    } else if (astObj1.type === 'leaf' || astObj2.type === 'leaf') {
-      return astObj1.value !== astObj2.value
-        ? acc.concat(`\n${step(offset)}+ ${astToString(astObj2, offset)}\n${step(offset)}- ${astToString(astObj1, offset)}`)
-        : acc.concat(`\n${step(offset)}  ${astToString(astObj1, offset)}`);
-    }
-    return acc.concat(`\n${step(offset + 2)}${astObj1.key}: {${findDiff(astObj1, astObj2, offset + 4)}\n${step(offset + 2)}}`);
-  }, '');
+const toString = (ast, offset) => {
+  const keys = Object.keys(ast);
+  return keys.reduce((acc, cur) => (_.isObject(ast[cur]) ?
+    acc.concat(`\n${step(offset)}  ${cur}: {${toString(ast[cur], offset + 4)}\n${step(offset - 2)}`)
+    : acc.concat(`{\n${step(offset)}  ${cur}: ${ast[cur]}\n${step(offset - 2)}}`)), '');
 };
+
+const findDiff = (ast, offset = 2) => ast.reduce((acc, cur) => {
+  const value = _.isObject(cur.value) ? toString(cur.value, offset + 4) : cur.value;
+  if (cur.type === 'unchanged') {
+    return acc.concat(`\n${step(offset)}  ${cur.key}: ${value}`);
+  } else if (cur.type === 'changed') {
+    return acc.concat(`\n${step(offset)}+ ${cur.key}: ${cur.valueAfterChange}\n${step(offset)}- ${cur.key}: ${cur.valueBeforeChange}`);
+  } else if (cur.type === 'added') {
+    return acc.concat(`\n${step(offset)}+ ${cur.key}: ${value}`);
+  } else if (cur.type === 'removed') {
+    return acc.concat(`\n${step(offset)}- ${cur.key}: ${value}`);
+  }
+  return acc.concat(`\n${step(offset)}  ${cur.key}: {${findDiff(cur.children, offset + 4)}\n${step(offset + 2)}}`);
+}, '');
+
 
 const getFileExt = (pathToFile) => {
   const base = path.basename(pathToFile);
@@ -67,9 +66,8 @@ const genDiff = (pathToFile1, pathToFile2) => {
   const ext2 = getFileExt(pathToFile2);
   const data1 = fs.readFileSync(pathToFile1, 'utf-8');
   const data2 = fs.readFileSync(pathToFile2, 'utf-8');
-  const ast1 = makeAst(parse(data1, ext1));
-  const ast2 = makeAst(parse(data2, ext2));
-  return `{${findDiff(ast1, ast2)}\n}`;
+  const ast = genAst(parse(data1, ext1), parse(data2, ext2));
+  return `{${findDiff(ast)}\n}`;
 };
 
 export default genDiff;
