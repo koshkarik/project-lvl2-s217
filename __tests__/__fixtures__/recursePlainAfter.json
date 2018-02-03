@@ -1,0 +1,18 @@
+{
+    "timeout": "20",
+    "common": {
+        "setting2": 200,
+        "setting6": {
+            "os": "ops",
+            "ops": "vops"
+        },
+        "sites": "hexlet.io"
+    },
+    "group1": {
+        "baz": "bas"
+    },
+    "verbose": true,
+    "group2": {
+        "key": "value"
+    }
+}

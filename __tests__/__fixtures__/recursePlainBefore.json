@@ -1,0 +1,15 @@
+{
+    "timeout": "50",
+    "proxy": "something",
+    "common": {
+        "setting4": 234,
+        "setting5": "some",
+        "setting6": {
+            "os": "ops"
+        }
+    },
+    "group1": {
+        "baz": "bars"
+    },
+    "group3": "something"
+}
