@@ -24,15 +24,15 @@ export const genAst = (obj1, obj2) => {
 
 const step = times => ' '.repeat(times);
 
-const toString = (ast, offset) => {
+const objToString = (ast, offset) => {
   const keys = Object.keys(ast);
   return keys.reduce((acc, cur) => (_.isObject(ast[cur])
-    ? acc.concat(`\n${step(offset)}  ${cur}: {${toString(ast[cur], offset + 4)}\n${step(offset - 2)}`)
+    ? acc.concat(`\n${step(offset)}  ${cur}: {${objToString(ast[cur], offset + 4)}\n${step(offset - 2)}`)
     : acc.concat(`{\n${step(offset)}  ${cur}: ${ast[cur]}\n${step(offset - 2)}}`)), '');
 };
 
 const findDiff = (ast, offset = 2) => ast.reduce((acc, cur) => {
-  const value = _.isObject(cur.value) ? toString(cur.value, offset + 4) : cur.value;
+  const value = _.isObject(cur.value) ? objToString(cur.value, offset + 4) : cur.value;
   if (cur.type === 'unchanged') {
     return acc.concat(`\n${step(offset)}  ${cur.key}: ${value}`);
   } else if (cur.type === 'changed') {
