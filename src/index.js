@@ -4,11 +4,9 @@ import yaml from 'js-yaml';
 import fs from 'fs';
 import path from 'path';
 
-export const genAst = (obj1 = {}, obj2 = {}) => {
-  const firstKeys = Object.keys(obj1);
-  const secondKeys = Object.keys(obj2);
-  const unitedKeys = _.union(firstKeys, secondKeys);
-  return unitedKeys.map((cur) => {
+export const genAst = (obj1, obj2) => {
+  const unionOfKeys = _.union(Object.keys(obj1), Object.keys(obj2));
+  return unionOfKeys.map((cur) => {
     if (_.isObject(obj1[cur]) && _.isObject(obj2[cur])) {
       return ({ type: 'nestedObj', key: cur, children: genAst(obj1[cur], obj2[cur]) });
     } else if (obj1[cur] && !obj2[cur]) {
@@ -28,8 +26,8 @@ const step = times => ' '.repeat(times);
 
 const toString = (ast, offset) => {
   const keys = Object.keys(ast);
-  return keys.reduce((acc, cur) => (_.isObject(ast[cur]) ?
-    acc.concat(`\n${step(offset)}  ${cur}: {${toString(ast[cur], offset + 4)}\n${step(offset - 2)}`)
+  return keys.reduce((acc, cur) => (_.isObject(ast[cur])
+    ? acc.concat(`\n${step(offset)}  ${cur}: {${toString(ast[cur], offset + 4)}\n${step(offset - 2)}`)
     : acc.concat(`{\n${step(offset)}  ${cur}: ${ast[cur]}\n${step(offset - 2)}}`)), '');
 };
 
