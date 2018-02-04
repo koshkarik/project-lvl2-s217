@@ -22,20 +22,20 @@ const checkSign = (type) => {
 
 const checkObject = [
   {
-    type: ['unchanged', 'added', 'removed'],
+    types: ['unchanged', 'added', 'removed'],
     makeString: (obj, value, off) => `\n${step(off)}${checkSign(obj.type)}${obj.key}: ${value}`,
   }, {
-    type: ['changed'],
+    types: ['changed'],
     makeString: (obj, value, off) =>
       `\n${step(off)}+ ${obj.key}: ${obj.valueAfterChange}\n${step(off)}- ${obj.key}: ${obj.valueBeforeChange}`,
   }, {
-    type: ['nestedObj'],
+    types: ['nestedObj'],
     makeString: (obj, value, off, fn) =>
       `\n${step(off)}${checkSign(obj.type)}${obj.key}: ${fn(obj.children, off + 4)}`,
   },
 ];
 
-const getRightObj = checkType => _.find(checkObject, ({ type }) => type.includes(checkType));
+const getRightObj = checkType => _.find(checkObject, ({ types }) => types.includes(checkType));
 
 const simpleRender = (ast, offset = 2) => {
   const result = ast.reduce((acc, cur) => {
