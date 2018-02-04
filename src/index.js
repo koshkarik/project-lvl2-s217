@@ -33,24 +33,6 @@ export const genAst = (obj1, obj2) =>
   _.union(_.keys(obj1), _.keys(obj2))
     .map(cur => getAttributes(obj1, obj2, cur).attributes(obj1, obj2, cur, genAst));
 
-// export const genAst = (obj1, obj2) => {
-//   const unionOfKeys = _.union(Object.keys(obj1), Object.keys(obj2));
-//   return unionOfKeys.map((cur) => {
-//     if (_.isObject(obj1[cur]) && _.isObject(obj2[cur])) {
-//       return ({ type: 'nestedObj', key: cur, children: genAst(obj1[cur], obj2[cur]) });
-//     } else if (obj1[cur] && !obj2[cur]) {
-//       return ({ type: 'removed', key: cur, value: obj1[cur] });
-//     } else if (!obj1[cur] && obj2[cur]) {
-//       return ({ type: 'added', key: cur, value: obj2[cur] });
-//     } else if (obj1[cur] === obj2[cur]) {
-//       return ({ type: 'unchanged', key: cur, value: obj1[cur] });
-//     }
-//     return ({
-//       type: 'changed', key: cur, valueBeforeChange: obj1[cur], valueAfterChange: obj2[cur],
-//     });
-//   });
-// };
-
 const getFileExt = (pathToFile) => {
   const base = path.basename(pathToFile);
   return path.extname(base).substring(1);
