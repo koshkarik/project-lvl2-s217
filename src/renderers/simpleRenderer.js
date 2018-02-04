@@ -9,19 +9,39 @@ const objToString = (ast, offset) => {
     : acc.concat(`{\n${step(offset)}  ${cur}: ${ast[cur]}\n${step(offset - 2)}}`)), []);
 };
 
+const checkSign = (type) => {
+  switch (type) {
+    case 'added':
+      return '+ ';
+    case 'removed':
+      return '- ';
+    default:
+      return '  ';
+  }
+};
+
+const checkObject = [
+  {
+    type: ['unchanged', 'added', 'removed'],
+    makeString: (obj, value, off) => `\n${step(off)}${checkSign(obj.type)}${obj.key}: ${value}`,
+  }, {
+    type: ['changed'],
+    makeString: (obj, value, off) =>
+      `\n${step(off)}+ ${obj.key}: ${obj.valueAfterChange}\n${step(off)}- ${obj.key}: ${obj.valueBeforeChange}`,
+  }, {
+    type: ['nestedObj'],
+    makeString: (obj, value, off, fn) =>
+      `\n${step(off)}${checkSign(obj.type)}${obj.key}: ${fn(obj.children, off + 4)}`,
+  },
+];
+
+const getRightObj = checkType => _.find(checkObject, ({ type }) => type.includes(checkType));
+
 const simpleRender = (ast, offset = 2) => {
   const result = ast.reduce((acc, cur) => {
     const value = _.isObject(cur.value) ? objToString(cur.value, offset + 4) : cur.value;
-    if (cur.type === 'unchanged') {
-      return acc.concat(`\n${step(offset)}  ${cur.key}: ${value}`);
-    } else if (cur.type === 'changed') {
-      return acc.concat(`\n${step(offset)}+ ${cur.key}: ${cur.valueAfterChange}\n${step(offset)}- ${cur.key}: ${cur.valueBeforeChange}`);
-    } else if (cur.type === 'added') {
-      return acc.concat(`\n${step(offset)}+ ${cur.key}: ${value}`);
-    } else if (cur.type === 'removed') {
-      return acc.concat(`\n${step(offset)}- ${cur.key}: ${value}`);
-    }
-    return acc.concat(`\n${step(offset)}  ${cur.key}: ${simpleRender(cur.children, offset + 4)}`);
+    const nodeString = getRightObj(cur.type);
+    return acc.concat(nodeString.makeString(cur, value, offset, simpleRender));
   }, []);
   return `{${result.join('')}\n${step(offset - 2)}}`;
 };
