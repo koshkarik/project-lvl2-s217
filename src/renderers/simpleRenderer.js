@@ -2,12 +2,10 @@ import _ from 'lodash';
 
 const step = times => ' '.repeat(times);
 
-const objToString = (ast, offset) => {
-  const keys = Object.keys(ast);
-  return keys.reduce((acc, cur) => (_.isObject(ast[cur])
-    ? acc.concat(`\n${step(offset)}  ${cur}: {${objToString(ast[cur], offset + 4)}\n${step(offset - 2)}`)
-    : acc.concat(`{\n${step(offset)}  ${cur}: ${ast[cur]}\n${step(offset - 2)}}`)), []);
-};
+const objToString = (ast, offset) => _.keys(ast).reduce((acc, cur) => (_.isObject(ast[cur])
+  ? acc.concat(`\n${step(offset)}  ${cur}: {${objToString(ast[cur], offset + 4)}\n${step(offset - 2)}`)
+  : acc.concat(`{\n${step(offset)}  ${cur}: ${ast[cur]}\n${step(offset - 2)}}`)), []);
+
 
 const checkSign = (type) => {
   switch (type) {
