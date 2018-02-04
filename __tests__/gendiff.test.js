@@ -1,7 +1,7 @@
 import fs from 'fs';
 import genDiff from './../src/';
 
-describe('Flat file difference tests', () => {
+describe('Simple render', () => {
   const expected = fs.readFileSync('./__tests__/__fixtures__/genDiffExpected', 'utf-8');
   it('json files', () => {
     expect(genDiff('./__tests__/__fixtures__/before.json', './__tests__/__fixtures__/after.json'))
@@ -38,7 +38,7 @@ describe('Flat file difference tests', () => {
   });
 });
 
-describe('Plane difference', () => {
+describe('Plain render', () => {
   const easyFlatExpected = fs.readFileSync('./__tests__/__fixtures__/easyPlainExpected', 'utf-8');
   const recursePlainExpected = fs.readFileSync('./__tests__/__fixtures__/recursePlainExpected', 'utf-8');
   it('easy files', () => {
@@ -46,5 +46,12 @@ describe('Plane difference', () => {
   });
   it('recursive files', () => {
     expect(genDiff('./__tests__/__fixtures__/recursePlainBefore.json', './__tests__/__fixtures__/recursePlainAfter.json', 'plain')).toBe(recursePlainExpected);
+  });
+});
+
+describe('Json renderer', () => {
+  const jsonExpected = fs.readFileSync('./__tests__/__fixtures__/jsonExpected.json', 'utf-8');
+  it('recurse files', () => {
+    expect(genDiff('./__tests__/__fixtures__/beforeRecStructure.yml', './__tests__/__fixtures__/afterRecStructure.ini', 'json')).toBe(jsonExpected);
   });
 });
