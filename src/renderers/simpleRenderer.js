@@ -6,8 +6,7 @@ const valueToString = (value, offset) => {
   if (_.isArray(value) || !_.isObject(value)) {
     return value;
   }
-  const astKeys = _.keys(value);
-  return astKeys.reduce((acc, cur) => {
+  return _.keys(value).reduce((acc, cur) => {
     if (_.isObject(value[cur])) {
       const toAddRecursive = `\n${step(offset)}  ${cur}: {${valueToString(value[cur], offset + 4)}\n${step(offset - 2)}`;
       return acc.concat(toAddRecursive);
