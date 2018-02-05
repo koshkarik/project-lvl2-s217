@@ -2,7 +2,7 @@ import plainRender from './plainRenderer';
 import simpleRender from './simpleRenderer';
 import jsonRender from './jsonRenderer';
 
-const render = (ast, renderMethod) => {
+export default (ast, renderMethod) => {
   switch (renderMethod) {
     case 'plain':
       return plainRender(ast);
@@ -12,5 +12,3 @@ const render = (ast, renderMethod) => {
       return simpleRender(ast);
   }
 };
-
-export default render;
