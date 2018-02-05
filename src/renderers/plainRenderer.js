@@ -9,7 +9,7 @@ const plainRender = (ast, pathString = '') => {
     const newPath = `${pathString}${cur.key}.`;
     switch (cur.type) {
       case 'changed':
-        return acc.concat(`Property '${pathString}${cur.key}' was updated. From ${stringify(cur.valueBeforeChange)} to ${stringify(cur.valueAfterChange)}`);
+        return acc.concat(`Property '${pathString}${cur.key}' was updated. From ${stringify(cur.value[0])} to ${stringify(cur.value[1])}`);
       case 'removed':
         return acc.concat(`Property '${pathString}${cur.key}' was removed`);
       case 'added':

@@ -2,45 +2,34 @@ import _ from 'lodash';
 
 const step = times => ' '.repeat(times);
 
-const objToString = (ast, offset) => _.keys(ast).reduce((acc, cur) => (_.isObject(ast[cur])
-  ? acc.concat(`\n${step(offset)}  ${cur}: {${objToString(ast[cur], offset + 4)}\n${step(offset - 2)}`)
-  : acc.concat(`{\n${step(offset)}  ${cur}: ${ast[cur]}\n${step(offset - 2)}}`)), []);
-
-
-const checkSign = (type) => {
-  switch (type) {
-    case 'added':
-      return '+ ';
-    case 'removed':
-      return '- ';
-    default:
-      return '  ';
+const valueToString = (value, offset) => {
+  if (_.isArray(value) || !_.isObject(value)) {
+    return value;
   }
+  const astKeys = _.keys(value);
+  return astKeys.reduce((acc, cur) => {
+    if (_.isObject(value[cur])) {
+      const toAddRecursive = `\n${step(offset)}  ${cur}: {${valueToString(value[cur], offset + 4)}\n${step(offset - 2)}`;
+      return acc.concat(toAddRecursive);
+    }
+    const toAdd = `{\n${step(offset)}  ${cur}: ${value[cur]}\n${step(offset - 2)}}`;
+    return acc.concat(toAdd);
+  }, []);
 };
 
-const checkObject = [
-  {
-    types: ['unchanged', 'added', 'removed'],
-    makeString: (obj, value, off) => `\n${step(off)}${checkSign(obj.type)}${obj.key}: ${value}`,
-  }, {
-    types: ['changed'],
-    makeString: (obj, value, off) =>
-      `\n${step(off)}+ ${obj.key}: ${obj.valueAfterChange}\n${step(off)}- ${obj.key}: ${obj.valueBeforeChange}`,
-  }, {
-    types: ['nestedObj'],
-    makeString: (obj, value, off, fn) =>
-      `\n${step(off)}${checkSign(obj.type)}${obj.key}: ${fn(obj.children, off + 4)}`,
-  },
-];
-
-const getRightObj = checkType => _.find(checkObject, ({ types }) => types.includes(checkType));
+const checkObject = {
+  unchanged: (obj, value, off) => `\n${step(off)}  ${obj.key}: ${value}`,
+  added: (obj, value, off) => `\n${step(off)}+ ${obj.key}: ${value}`,
+  removed: (obj, value, off) => `\n${step(off)}- ${obj.key}: ${value}`,
+  changed: (obj, value, off) => `\n${step(off)}+ ${obj.key}: ${value[1]}\n${step(off)}- ${obj.key}: ${value[0]}`,
+  nestedObj: (obj, value, off, fn) => `\n${step(off)}  ${obj.key}: ${fn(obj.children, off + 4)}`,
+};
 
 const simpleRender = (ast, offset = 2) => {
-  const result = ast.reduce((acc, cur) => {
-    const value = _.isObject(cur.value) ? objToString(cur.value, offset + 4) : cur.value;
-    const nodeString = getRightObj(cur.type);
-    return acc.concat(nodeString.makeString(cur, value, offset, simpleRender));
-  }, []);
+  const result = _.flatten(ast.map((cur) => {
+    const value = valueToString(cur.value, offset + 4);
+    return checkObject[cur.type](cur, value, offset, simpleRender);
+  }));
   return `{${result.join('')}\n${step(offset - 2)}}`;
 };
 
