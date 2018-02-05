@@ -1,3 +1,1 @@
-const jsonRender = ast => JSON.stringify(ast);
-
-export default jsonRender;
+export default ast => JSON.stringify(ast);
