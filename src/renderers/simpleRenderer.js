@@ -26,10 +26,10 @@ const checkObject = {
 };
 
 const simpleRender = (ast, offset = 2) => {
-  const result = _.flatten(ast.map((cur) => {
+  const result = ast.map((cur) => {
     const value = valueToString(cur.value, offset + 4);
     return checkObject[cur.type](cur, value, offset, simpleRender);
-  }));
+  });
   return `{${result.join('')}\n${step(offset - 2)}}`;
 };
 
