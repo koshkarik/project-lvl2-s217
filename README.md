@@ -8,7 +8,7 @@
  *Генерация отчета в виде plain text, pretty и json*  
 
 #### Установка утилиты:  
- `npm i hexlet-project-2`   
+ `npm install -g hexlet-project-2`   
 #### Использование утилиты:  
  `$ gendiff before.json after.json`  
  `$ gendiff --format plain before.json after.json`
